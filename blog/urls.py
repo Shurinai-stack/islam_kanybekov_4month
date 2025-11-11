@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from posts.views import test_view,view_html,posts_list_view,home_view,post_detail_view
+from posts.views import test_view,view_html,posts_list_view,home_view,post_detail_view,post_create_view
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -26,5 +26,6 @@ urlpatterns = [
     path("html/", view_html),
     path("posts/", posts_list_view),
     path("", home_view),
-    path("posts/<int:post_id>/", post_detail_view)
+    path("posts/<int:post_id>/", post_detail_view),
+    path("posts/create/", post_create_view),
 ] +static (settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
