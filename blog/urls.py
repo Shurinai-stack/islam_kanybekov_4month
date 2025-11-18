@@ -17,8 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from posts.views import test_view,view_html,posts_list_view,home_view,post_detail_view,post_create_view
+from users.views import register_view, login_view
 from django.conf.urls.static import static
 from django.conf import settings
+
+users_patterns = [
+    path('register/', register_view),
+    path('login/', login_view),
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +34,4 @@ urlpatterns = [
     path("", home_view),
     path("posts/<int:post_id>/", post_detail_view),
     path("posts/create/", post_create_view),
-] +static (settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+] +users_patterns +static (settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
