@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
+<form action="" method="get">
+    {{ form.as_p }}
+    <p>
+    <button type="submit">Search</button>
+    </p>
+</form>
 {% for post in posts %}
 <div class="card" style="width: 18rem; margin-left: 10px;">
     {% if post.image %}
@@ -15,4 +21,11 @@
     </div>
 </div>
 {% endfor %}
+<div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+    {% for page in pages %}
+        <a href="/posts/?page={{ page }}" class="btn btn-primary" style="margin: 0 5px;">
+            {{ page }}
+        </a>
+    {% endfor %}
+</div>
 {% endblock %}
