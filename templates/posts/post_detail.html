@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{%load static%}
 {% block content %}
 <div class="card" style="width: 18rem; margin-left: 10px;">
     {% if post.image %}
@@ -8,6 +9,9 @@
         <h5 class="card-title">{{ post.title }}</h5>
         <p class="card-text">{{ post.content }}</p>
         <h6 class="card-title">{{ post.rate }}</h6>
+        {%if request.user == post.author%}
+        <a href="/posts/{{post.id}}/update" class="btn btn-primary">Update post</a>
+        {%endif%}
     </div>
 </div>
 {% endblock %}

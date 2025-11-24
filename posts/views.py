@@ -1,8 +1,17 @@
 from django.shortcuts import render,HttpResponse, redirect 
 from posts.models import Post
-from posts.forms import PostForm, SearchForm
+from posts.forms import PostForm, SearchForm, PostForm2
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.views import View
+from django.views.generic import ListView, DetailView, CreateView
+
+
+
+class TestView(View):
+    def get(self, request):
+        return HttpResponse("Hello world!")
+
 
 def home_view(request):
     if request.method == "GET":
@@ -61,6 +70,23 @@ def posts_list_view(request):
             }
         )
 
+class PostListView(ListView):
+    model = Post
+    template_name = 'posts/posts_list.html'
+    context_object_name = 'posts'
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'posts/post_detail.html'
+    context_object_name = 'post'
+
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostForm2
+    template_name = 'posts/post_create.html'
+    success_url = '/posts/'
+
 @login_required(login_url='/login/')
 def post_detail_view(request, post_id):
     if request.method == "GET":
@@ -70,10 +96,10 @@ def post_detail_view(request, post_id):
 @login_required(login_url='/login/')
 def post_create_view(request):
     if request.method == "GET":
-        form = PostForm()
+        form = PostForm2()
         return render (request, "posts/post_create.html", context={"form":form})
     if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)
+        form = PostForm2(request.POST, request.FILES)
         if not form.is_valid():
             return render(request,"posts/post_create.html", context={"form":form})
         
@@ -83,7 +109,21 @@ def post_create_view(request):
         image = form.cleaned_data["image"]
 
         try:
-            post = Post.objects.create(title=title, content=content, rate=rate, image=image)
+            # post = Post.objects.create(title=title, content=content, rate=rate, image=image)
+            form.save()
             return redirect("/posts")
         except Exception as e:
             return HttpResponse(f"Error: {e}")
+
+@login_required(login_url='/login/')    
+def post_update_view(request, post_id):
+    post = Post.objects.get(id=post_id, author=request.user)
+    if request.method == 'GET':
+        form = PostForm2(instance=post)
+        return render(request, 'posts/post_update.html', context={'form':form})
+    if request.method == 'POST':
+        form = PostForm2(request.POST, request.FILES, instance=post)
+        if not form.is_valid():
+            return render(request, 'posts/post_update.html', context={"post":post})
+        form.save()
+        return redirect("/profile/")

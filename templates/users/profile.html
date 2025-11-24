@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h1 class="mt-5" style="text-align: center;">
+    Profile
+</h1>
+
+<div class="container" style=" margin-left: 40%">
+    <img src="{{profile.image.url}}" alt="Profile Picture" style="width: 200px; height: 200px; border-radius: 50%;">
+    <h2>{{ profile.user.username }}</h2>
+    <h3>{{ profile.user.firts_name }}</h3>
+    <h3>{{ profile.user.last_name }}</h3>
+    <h3>{{ profile.user.email }}</h3>
+    <h3>{{ profile.age }}</h3>
+</div>
+{% for post in posts %}
+<div class="card" style="width: 18rem; margin-left: 40%;">
+    {% if post.image %}
+        <img src="{{ post.image.url }}" class="card-img-top" alt="...">
+    {% else %}
+        <img src="/static/Placeholder-_-Begrippenlijst.svg" class="card-img-top" alt="...">
+    {% endif %}
+    <div class="card-body">
+        <h5 class="card-title">{{ post.title }}</h5>
+        <p class="card-text">{{ post.content }}</p>
+        <h6 class="card-title">{{ post.rate }}</h6>
+        <a href="/posts/{{post.id}}" class="btn btn-primary">Go somewhere</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
